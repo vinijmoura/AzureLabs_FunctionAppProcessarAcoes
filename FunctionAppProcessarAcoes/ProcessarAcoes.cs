@@ -19,7 +19,7 @@ namespace FunctionAppProcessarAcoes
         [FunctionName("ProcessarAcoes")]
         public void Run([ServiceBusTrigger("queue-acoes", Connection = "AzureServiceBus")]string myQueueItem, ILogger log)
         {
-            log.LogInformation($"ProcessarAcoes V2 - Dados: {myQueueItem}");
+            log.LogInformation($"ProcessarAcoes V3 - Dados: {myQueueItem}");
 
             Acao acao = null;
             try
@@ -32,7 +32,7 @@ namespace FunctionAppProcessarAcoes
             }
             catch
             {
-                log.LogError("ProcessarAcoes V2 - Erro durante a deserializacao!");
+                log.LogError("ProcessarAcoes V3 - Erro durante a deserializacao!");
             }
 
             if (acao != null)
@@ -40,15 +40,15 @@ namespace FunctionAppProcessarAcoes
                 var validationResult = new AcaoValidator().Validate(acao);
                 if (validationResult.IsValid)
                 {
-                    log.LogInformation($"ProcessarAcoes V2 - Dados pos formatacao: {JsonSerializer.Serialize(acao)}");
+                    log.LogInformation($"ProcessarAcoes V3 - Dados pos formatacao: {JsonSerializer.Serialize(acao)}");
                     _repository.Save(acao);
-                    log.LogInformation("ProcessarAcoes V2 - Acao registrada com sucesso!");
+                    log.LogInformation("ProcessarAcoes V3 - Acao registrada com sucesso!");
                 }
                 else
                 {
-                    log.LogError("ProcessarAcoes V2 - Dados invalidos para a Acao");
+                    log.LogError("ProcessarAcoes V3 - Dados invalidos para a Acao");
                     foreach (var error in validationResult.Errors)
-                        log.LogError($"ProcessarAcoes V2 - {error.ErrorMessage}");
+                        log.LogError($"ProcessarAcoes V3 - {error.ErrorMessage}");
                 }
             }
         }
